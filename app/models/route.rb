@@ -5,6 +5,8 @@ class Route < ApplicationRecord
   accepts_nested_attributes_for :addresses
 
   #validations
-  #TODO
+  validates :provider, presence: true
+  validates :geo_coordinates, length: {maximum:2}, presence: true
+  validates :addresses, presence: true
 
 end
