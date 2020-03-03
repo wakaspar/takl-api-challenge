@@ -15,9 +15,11 @@ gem 'puma', '~> 3.11'
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+# Use Geocoder for searching for geo coordinates
 gem 'geocoder'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
+# Use HTTParty for formatting requests to the HERE API
 gem 'httparty'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
