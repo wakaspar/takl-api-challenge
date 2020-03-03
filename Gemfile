@@ -9,6 +9,8 @@ gem 'rails', '~> 5.2.4', '>= 5.2.4.1'
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
+# Use HTTParty for formatting requests to the HERE API
+gem 'httparty'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -19,8 +21,7 @@ gem 'puma', '~> 3.11'
 gem 'geocoder'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
-# Use HTTParty for formatting requests to the HERE API
-gem 'httparty'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
