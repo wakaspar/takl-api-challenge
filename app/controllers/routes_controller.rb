@@ -23,14 +23,9 @@ class RoutesController < ApplicationController
     @route.response = @res.parsed_response
 
     if @route.save
-      # properly format route before returning to user
+      # properly format response before rendering
       generate_user_response
-      # output
-      # p '<== USER_RESPONSE ==>'
-      # p @user_response
-
       render json: @user_response, status: :created, location: @route
-
     else
       render json: @route.errors, status: :unprocessable_entity
     end
@@ -62,7 +57,6 @@ class RoutesController < ApplicationController
 
   # GET optimal delivery route from HERE API
   def get_optimal_route
-
     # prepare starting [x,y] for API request
     prep_start_point
     # prepare destinations for API request
@@ -75,32 +69,30 @@ class RoutesController < ApplicationController
     return @res
   end
 
-  # Generates properly formatted user response for POST method
+  # Generate properly formatted user response for POST method
   def generate_user_response
-    # once saved, parse JSON response
+    # parse JSON response
     @res = JSON.parse @res, symbolize_names: true
     @res = @res[:results][0][:waypoints]
-
+    # declare @user_response as an empty array
     @user_response = Array.new
-
+    # reverse geocode and map wapoints to @user_response in optimal order
     @res.map.with_index { |wp|
       waypoint = Hash.new
       address = Geocoder.search([ wp[:lat], wp[:lng] ])
-
+      # set waypoint attributes
       waypoint[:address] = address.first.address
       waypoint[:longitude] = wp[:lat]
       waypoint[:latitude] = wp[:lng]
-      p waypoint
-
+      # push waypoint to @user_response array
       @user_response.push(waypoint)
     }
-
     return @user_response
   end
 
   # Prepare destinations, use Geocoder to get [x,y] for a route's addresses
   def prep_destinations
-    # grabs addresses from request params
+    # grab addresses from request params
     @delivery_route_addresses = params[:route][:addresses_attributes]
     # map delivery addresses into [x,y]
     @destinations = @delivery_route_addresses.map.with_index(1) { |address, idx|
@@ -132,13 +124,13 @@ class RoutesController < ApplicationController
     @base_uri = 'https://wse.ls.hereapi.com/2/findsequence.json?'
     # application-based HERE API key
     @apiKey = '2EQNCCaqaxKw01dy0uXu2HVo_HeAP8xBIxghL1yNM5A'
-    # builds query string for HERE API's optimal route endpoint
+    # build query string for HERE API's optimal route endpoint
     @query_string = @base_uri + @start_point + @destinations.join('&') + '&mode=fastest;car&' + 'apiKey=' + @apiKey
 
     return @query_string
   end
 
-  # Requires and permits Route parameters
+  # Require and permit Route parameters
   def route_params
     params.require(:route).permit( :provider,
                                    :response,
