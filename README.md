@@ -63,6 +63,7 @@ by Adam Kaspar
   - Refactor RoutesController's `generate_user_response` method to reflect changes to `prep_destinations`, eliminating the need to reverse geocode addresses for `@user_response`.
 - Get curl requests working (`419 Parse Error`; Bad Request, bug in address data?).
 - Finish request specs (RSpec testing).
+- Upgrade OSX to migrate to Docker image.
 
 ## Ownership
 - See the repo: https://www.github.com/wakaspar/takl-api-challenge.
