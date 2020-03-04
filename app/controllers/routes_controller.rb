@@ -23,7 +23,14 @@ class RoutesController < ApplicationController
     @route.response = @res.parsed_response
 
     if @route.save
-      render json: @route, status: :created, location: @route
+      # properly format route before returning to user
+      generate_user_response
+      # output
+      # p '<== USER_RESPONSE ==>'
+      # p @user_response
+
+      render json: @user_response, status: :created, location: @route
+
     else
       render json: @route.errors, status: :unprocessable_entity
     end
@@ -48,23 +55,47 @@ class RoutesController < ApplicationController
   private
 
 
-  # sets Route on show, update, and destroy
+  # Sets Route on show, update, and destroy
   def set_route
     @route = Route.find(params[:id])
   end
 
   # GET optimal delivery route from HERE API
   def get_optimal_route
+
     # prepare starting [x,y] for API request
     prep_start_point
     # prepare destinations for API request
     prep_destinations
     # combines start_point and destinations into a query string
     build_query_string
-    # sends GET Request to Traveling Salesman Endpoint of HERE API
+    # sends formatted GET Request to Traveling Salesman Endpoint of HERE API
     @res = HTTParty.get(@query_string, format: :plain)
 
     return @res
+  end
+
+  # Generates properly formatted user response for POST method
+  def generate_user_response
+    # once saved, parse JSON response
+    @res = JSON.parse @res, symbolize_names: true
+    @res = @res[:results][0][:waypoints]
+
+    @user_response = Array.new
+
+    @res.map.with_index { |wp|
+      waypoint = Hash.new
+      address = Geocoder.search([ wp[:lat], wp[:lng] ])
+
+      waypoint[:address] = address.first.address
+      waypoint[:longitude] = wp[:lat]
+      waypoint[:latitude] = wp[:lng]
+      p waypoint
+
+      @user_response.push(waypoint)
+    }
+
+    return @user_response
   end
 
   # Prepare destinations, use Geocoder to get [x,y] for a route's addresses
@@ -114,4 +145,5 @@ class RoutesController < ApplicationController
                                    addresses_attributes: [:street_address, :city, :state, :zip],
                                    :geo_coordinates => [] )
   end
+
 end
