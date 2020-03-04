@@ -13,7 +13,7 @@
 - Start Puma server:
   $ rails s
 
-- You can make requests via Postman. Download Postman here:https://www.postman.com/.  Example request below:
+- You can make requests via Postman. Download Postman here: https://www.postman.com/.  Example request below:
   - In Postman:
     - POST to: localhost:3000/routes
     - Include headers: { Content-Type : application/json }
@@ -52,6 +52,8 @@
   - In Postman or via browser:
     - Navigate to localhost:3000/routes for a full list of all available routes.
     - Navigate to localhost:3000/routes/:id/addresses for stored addresses associated to a given Route.
+  - Run RSpec tests (all currently implemented should pass):
+    $ bundle exec rspec
 
 ## Todo
 - Refactor RoutesController's prep_destinations method to keep street_addresses intact.
@@ -60,5 +62,6 @@
 - Finish request specs (RSpec testing).
 
 ## Ownership
+- See the repo: https://www.github.com/wakaspar/takl-api-challenge.
 - Please send all questions/feedback/complaints/pizza coupons to wakaspar@gmail.com.
 - Thanks for your consideration and happy coding!
